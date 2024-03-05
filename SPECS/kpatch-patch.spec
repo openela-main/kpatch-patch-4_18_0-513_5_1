@@ -1,17 +1,42 @@
 # Set to 1 if building an empty subscription-only package.
-%define empty_package		1
+%define empty_package		0
 
 #######################################################
 # Only need to update these variables and the changelog
 %define kernel_ver	4.18.0-513.5.1.el8_9
 %define kpatch_ver	0.9.9
-%define rpm_ver		0
-%define rpm_rel		0
+%define rpm_ver		1
+%define rpm_rel		3
 
 %if !%{empty_package}
 # Patch sources below. DO NOT REMOVE THIS LINE.
-Source100:		XXX.patch
-#Source101:		YYY.patch
+#
+# https://issues.redhat.com/browse/RHEL-13051
+Source100: CVE-2023-2163.patch
+#
+# https://issues.redhat.com/browse/RHEL-16309
+Source101: CVE-2023-3812.patch
+#
+# https://issues.redhat.com/browse/RHEL-12925
+Source102: CVE-2023-5178.patch
+#
+# https://issues.redhat.com/browse/RHEL-16979
+Source103: CVE-2023-42753.patch
+#
+# https://issues.redhat.com/browse/RHEL-17934
+Source104: CVE-2023-4622.patch
+#
+# https://issues.redhat.com/browse/RHEL-15212
+Source105: CVE-2023-45871.patch
+#
+# https://issues.redhat.com/browse/RHEL-16625
+Source106: CVE-2023-4623.patch
+#
+# https://issues.redhat.com/browse/RHEL-14422
+Source107: CVE-2023-4921.patch
+#
+# https://issues.redhat.com/browse/RHEL-22111
+Source108: CVE-2024-0646.patch
 # End of patch sources. DO NOT REMOVE THIS LINE.
 %endif
 
@@ -216,5 +241,20 @@ It is only a method to subscribe to the kpatch stream for kernel-%{kernel_ver}.
 %endif
 
 %changelog
+* Wed Feb 07 2024 Yannick Cote <ycote@redhat.com> [1-3.el8_9]
+- kernel: ktls overwrites readonly memory pages when using function splice with a ktls socket as destination [RHEL-22111] {CVE-2024-0646}
+- kernel: use-after-free in sch_qfq network scheduler [RHEL-14422] {CVE-2023-4921}
+- kernel: net/sched: sch_hfsc UAF [RHEL-16625] {CVE-2023-4623}
+- kernel: IGB driver inadequate buffer size for frames larger than MTU [RHEL-15212] {CVE-2023-45871}
+
+* Thu Dec 14 2023 Yannick Cote <ycote@redhat.com> [1-2.el8_9]
+- kernel: use after free in unix_stream_sendpage [RHEL-17934] {CVE-2023-4622}
+- kernel: netfilter: potential slab-out-of-bound access due to integer underflow [RHEL-16979] {CVE-2023-42753}
+
+* Tue Nov 21 2023 Yannick Cote <ycote@redhat.com> [1-1.el8_9]
+- kernel: use after free in nvmet_tcp_free_crypto in NVMe [RHEL-12925] {CVE-2023-5178}
+- kernel: tun: bugs for oversize packet when napi frags enabled in tun_napi_alloc_frags [RHEL-16309] {CVE-2023-3812}
+- kernel: bpf: Incorrect verifier pruning leads to unsafe code paths being incorrectly marked as safe [RHEL-13051] {CVE-2023-2163}
+
 * Tue Oct 24 2023 Yannick Cote <ycote@redhat.com> [0-0.el8]
 - An empty patch to subscribe to kpatch stream for kernel-4.18.0-513.5.1.el8_9 [RHEL-14594]
